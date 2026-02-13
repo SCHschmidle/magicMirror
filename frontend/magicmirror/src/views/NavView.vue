@@ -1,9 +1,16 @@
 <script setup>
-
+import { RouterLink } from 'vue-router';
 </script>
 <template>
-<h1>Hello</h1>
+<nav>
+    <RouterLink to="/dashboard">Dashboard</RouterLink>
+    <RouterLink to="/display">Display</RouterLink>
+    <RouterLink to="/upload" class="upload">Upload</RouterLink>
+</nav>
 </template>
 <style scoped>
-
+nav{
+    background-color: rgb(1, 0, 29);
+    height: 10%;
+}
 </style>
