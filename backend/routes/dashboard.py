@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import shutil
+from pydantic import BaseModel
 
 router = APIRouter()
 
@@ -13,6 +14,9 @@ filedata_storage= []
 UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "media"
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
+
+class ActiveUpdateRequest(BaseModel):
+    key: int
 
 @router.get("/setup")
 async def setdata():
@@ -64,10 +68,11 @@ async def getdata():
     return filedata_storage
 
 @router.post("/activeupdate")
-async def activeupdate(key: int):
+async def activeupdate(request: ActiveUpdateRequest):
+    key = request.key
     global filedata_storage
-    filedata_storage[key][active]= not(filedata_storage[key][active])
-    return "updated {key} to {filedata_storage[key][active]}"
+    filedata_storage[key]['active']= not(filedata_storage[key]['active'])
+    return f"updated {key} to {filedata_storage[key]['active']}"
 
 @router.get("/display")
 async def display_view():
