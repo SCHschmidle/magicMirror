@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
-const files = ref([''])
-
+const filesData = ref([''])
+onMounted(async() => {
+    console.log('HomeView mounted')
+    filesData = await fetch('localhost:8000')
+})
 
 </script>
 <template>

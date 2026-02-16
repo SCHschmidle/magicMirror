@@ -4,9 +4,12 @@ from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import shutil
 from pathlib import Path
+import math
 router = APIRouter()
 
 active = False
+filedata_storage= [{'active': active}, {'active': active}]
+
 
 UPLOAD_DIR = Path("images")
 
@@ -35,5 +38,14 @@ async def upload_single_file(file: UploadFile = File(...)):
         "active": active,
     }
 
-
-
+@router.get("/filedata")
+async def getdata():
+    filedata= []
+    index=0
+    folder = Path("images")
+    for file in folder.glob("*"):  # nur .txt Dateien
+        filedata.append({'name': file.name,
+                         'size': round(file.stat().st_size/1024/1024,3),
+                         'active': filedata_storage[index]['active']})
+        index+=1
+    return filedata
