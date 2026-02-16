@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request, File, UploadFile, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse  
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import shutil
@@ -34,3 +34,8 @@ async def upload_single_file(file: UploadFile = File(...)):
         "location": str(file_path),
         "active": active,
     }
+
+@router.get("/display")
+async def display_view():
+    image_files = [f.name for f in UPLOAD_DIR.iterdir() if f.is_file() and f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif']]
+    return JSONResponse(content={"images": image_files})
