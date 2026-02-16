@@ -47,14 +47,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
-    <h1>Medien-Show</h1>
-    <div v-if="media.length > 0">
-      <img v-if="!isVideo(media[currentIndex])" :src="`/media/${media[currentIndex]}`" :alt="media[currentIndex]" style="max-width: 100%; height: auto;" />
-      <video v-else :src="`/media/${media[currentIndex]}`" controls autoplay muted style="max-width: 100%; height: auto;" @loadedmetadata="onVideoLoaded"></video>
-    </div>
-    <div v-else>
-      Keine Medien vorhanden.
-    </div>
+  <div class="display-view">
+    <img v-if="media.length > 0 && !isVideo(media[currentIndex])" :src="`/media/${media[currentIndex]}`" :alt="media[currentIndex]" />
+    <video v-else-if="media.length > 0" :src="`/media/${media[currentIndex]}`" autoplay muted @loadedmetadata="onVideoLoaded"></video>
   </div>
 </template>
