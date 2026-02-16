@@ -34,6 +34,3 @@ async def upload_single_file(file: UploadFile = File(...)):
         "location": str(file_path),
         "active": active,
     }
-
-
-
