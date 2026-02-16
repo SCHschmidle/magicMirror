@@ -9,6 +9,15 @@ router = APIRouter()
 
 active = False
 filedata_storage= []
+index=0
+filedata_storage.clear()
+folder = Path("../frontend/magicmirror/public/media")
+for file in folder.glob("*"):
+    filedata_storage.append({'id': index,
+                         'name': file.name,
+                         'size': round(file.stat().st_size/1024/1024,3),
+                         'active': active})
+    index+=1
 
 
 UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "media"
@@ -18,19 +27,7 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 class ActiveUpdateRequest(BaseModel):
     key: int
 
-@router.get("/setup")
-async def setdata():
-    global filedata_storage  
-    index=0
-    filedata_storage.clear()
-    folder = Path("../frontend/magicmirror/public/media")
-    for file in folder.glob("*"):
-        filedata_storage.append({'id': index,
-                         'name': file.name,
-                         'size': round(file.stat().st_size/1024/1024,3),
-                         'active': active})
-        index+=1
-    return filedata_storage
+
 
 @router.get("/dashboard", response_class=HTMLResponse )
 async def main(request: Request):
