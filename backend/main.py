@@ -12,7 +12,6 @@ from routes.dashboard import router as dashboard_router
 
 app = FastAPI()
 
-# CORS aktivieren für Frontend-Zugriff
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://localhost:3000"],

@@ -20,11 +20,11 @@ class ActiveUpdateRequest(BaseModel):
 
 @router.get("/setup")
 async def setdata():
-    global filedata_storage  # ✅ Zugriff auf globale Variable
+    global filedata_storage  
     index=0
     filedata_storage.clear()
-    folder = Path("images")
-    for file in folder.glob("*"):  # nur .txt Dateien
+    folder = Path("../frontend/magicmirror/public/media")
+    for file in folder.glob("*"):
         filedata_storage.append({'id': index,
                          'name': file.name,
                          'size': round(file.stat().st_size/1024/1024,3),
@@ -57,9 +57,9 @@ async def upload_single_file(file: UploadFile = File(...)):
 
 @router.get("/filedata")
 async def getdata():
-    global filedata_storage  # ✅ Zugriff auf globale Variable
+    global filedata_storage 
     filedata= []
-    folder = Path("images")
+    folder = Path("../frontend/magicmirror/public/media")
     for index, file in enumerate(folder.glob("*")):
         filedata.append({'id':index,
                          'name': file.name,
