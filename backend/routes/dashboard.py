@@ -3,17 +3,28 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import shutil
-from pathlib import Path
-import math
+
 router = APIRouter()
 
-active = False
-filedata_storage= [{'active': active}, {'active': active}]
-
-
+active = True
 UPLOAD_DIR = Path("images")
+filedata_storage = []  # ✅ Global definiert
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
+
+@router.get("/setup")
+async def setdata():
+    global filedata_storage  # ✅ Zugriff auf globale Variable
+    index=0
+    filedata_storage.clear()
+    folder = Path("images")
+    for file in folder.glob("*"):  # nur .txt Dateien
+        filedata_storage.append({'id': index,
+                         'name': file.name,
+                         'size': round(file.stat().st_size/1024/1024,3),
+                         'active': active})
+        index+=1
+    return filedata_storage
 
 @router.get("/dashboard", response_class=HTMLResponse )
 async def main(request: Request):
@@ -40,15 +51,21 @@ async def upload_single_file(file: UploadFile = File(...)):
 
 @router.get("/filedata")
 async def getdata():
+    global filedata_storage  # ✅ Zugriff auf globale Variable
     filedata= []
-    index=0
     folder = Path("images")
-    for file in folder.glob("*"):  # nur .txt Dateien
-        filedata.append({'name': file.name,
+    for index, file in enumerate(folder.glob("*")):
+        filedata.append({'id':index,
+                         'name': file.name,
                          'size': round(file.stat().st_size/1024/1024,3),
                          'active': filedata_storage[index]['active']})
-        index+=1
-    return filedata
+    return filedata_storage
+
+@router.post("/activeupdate")
+async def activeupdate(key: int):
+    global filedata_storage
+    filedata_storage[key][active]= not(filedata_storage[key][active])
+    return "updated {key} to {filedata_storage[key][active]}"
 
 @router.get("/display")
 async def display_view():

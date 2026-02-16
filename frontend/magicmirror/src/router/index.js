@@ -11,7 +11,7 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/displayview',
+      path: '/display',
       component: DisplayView
     },
     {
