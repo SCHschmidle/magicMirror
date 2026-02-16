@@ -141,4 +141,4 @@ tmp/
 *.log
 
 backend/images
-frontend/magicmirror/public/images
+frontend/magicmirror/public/media

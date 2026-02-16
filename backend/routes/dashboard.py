@@ -11,7 +11,7 @@ active = False
 filedata_storage= [{'active': active}, {'active': active}]
 
 
-UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "images"
+UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "media"
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -52,5 +52,8 @@ async def getdata():
 
 @router.get("/display")
 async def display_view():
-    image_files = [f.name for f in UPLOAD_DIR.iterdir() if f.is_file() and f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif']]
-    return JSONResponse(content={"images": image_files})
+    media_files = []
+    for f in UPLOAD_DIR.iterdir():
+        if f.is_file() and f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.avi', '.mov', '.webm']:
+            media_files.append(f.name)
+    return JSONResponse(content={"media": media_files})
