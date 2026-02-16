@@ -44,6 +44,9 @@ async def upload_single_file(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
+    filedata_storage.append({"name": file.filename,
+        "size": file.size,
+        "active": False,})
     return {
         "filename": file.filename,
         "content_type": file.content_type,
@@ -51,6 +54,7 @@ async def upload_single_file(file: UploadFile = File(...)):
         "location": str(file_path),
         "active": active,
     }
+
 
 @router.get("/filedata")
 async def getdata():
