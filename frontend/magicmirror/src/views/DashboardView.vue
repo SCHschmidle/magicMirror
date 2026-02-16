@@ -1,20 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
-const files = ref([
-    {
-        id: 1,
-        name: 'eins',
-        volume: '100gb',
-        active: true
-    },
-    {
-        id: 2,
-        name: 'zwei',
-        volume: '222gb',
-        active: false
-    }
-])
+const files = ref([''])
+
+
 </script>
 <template>
 <h1>Dashboard</h1>
