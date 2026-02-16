@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 const media = ref([]);
 const currentIndex = ref(0);
 let intervalId = null;
-const currentDuration = ref(10000);  
+const currentDuration = ref(10000);
 
 const isVideo = (filename) => {
   const ext = filename.split('.').pop().toLowerCase();
@@ -13,9 +13,9 @@ const isVideo = (filename) => {
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/display');
+    const response = await fetch('http://127.0.0.1:8000/filedata');
     const data = await response.json();
-    media.value = data.media;
+    media.value = data.filter(item => item.active === true);
     if (media.value.length > 0) {
       startSlideshow();
     }
@@ -25,6 +25,7 @@ onMounted(async () => {
 });
 
 const startSlideshow = () => {
+  if (intervalId) clearInterval(intervalId);
   intervalId = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % media.value.length;
     currentDuration.value = 10000;
@@ -32,7 +33,7 @@ const startSlideshow = () => {
 };
 
 const onVideoLoaded = (event) => {
-  currentDuration.value = event.target.duration * 1000;  
+  currentDuration.value = event.target.duration * 1000;
   if (intervalId) {
     clearInterval(intervalId);
     startSlideshow();
@@ -40,15 +41,29 @@ const onVideoLoaded = (event) => {
 };
 
 onUnmounted(() => {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
+  if (intervalId) clearInterval(intervalId);
 });
 </script>
 
 <template>
   <div class="display-view">
-    <img v-if="media.length > 0 && !isVideo(media[currentIndex])" :src="`/media/${media[currentIndex]}`" :alt="media[currentIndex]" />
-    <video v-else-if="media.length > 0" :src="`/media/${media[currentIndex]}`" autoplay muted @loadedmetadata="onVideoLoaded"></video>
+    <div v-if="media.length > 0">
+      <img
+        v-if="!isVideo(media[currentIndex].name)"
+        :src="`../../public/media/${media[currentIndex].name}`"
+        :alt="media[currentIndex].name"
+      />
+      <video
+        v-else
+        :src="`../../public/media/${media[currentIndex].name}`"
+        controls
+        autoplay
+        muted
+        @loadedmetadata="onVideoLoaded"
+      ></video>
+    </div>
+    <div v-else>
+      Keine aktiven Medien vorhanden.
+    </div>
   </div>
 </template>
