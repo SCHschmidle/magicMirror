@@ -11,7 +11,7 @@ active = False
 filedata_storage= [{'active': active}, {'active': active}]
 
 
-UPLOAD_DIR = Path("images")
+UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "images"
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
