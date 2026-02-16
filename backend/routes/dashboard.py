@@ -6,9 +6,11 @@ import shutil
 
 router = APIRouter()
 
-active = True
-UPLOAD_DIR = Path("images")
-filedata_storage = []  # ✅ Global definiert
+active = False
+filedata_storage= []
+
+
+UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "media"
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -69,5 +71,8 @@ async def activeupdate(key: int):
 
 @router.get("/display")
 async def display_view():
-    image_files = [f.name for f in UPLOAD_DIR.iterdir() if f.is_file() and f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif']]
-    return JSONResponse(content={"images": image_files})
+    media_files = []
+    for f in UPLOAD_DIR.iterdir():
+        if f.is_file() and f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.avi', '.mov', '.webm']:
+            media_files.append(f.name)
+    return JSONResponse(content={"media": media_files})

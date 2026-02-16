@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 <template>
 <nav>
     <RouterLink to="/dashboard">Dashboard</RouterLink>
-    <RouterLink to="/display">Display</RouterLink>
+    <RouterLink to="/displayview">Display</RouterLink>
     <RouterLink to="/upload" class="upload">Upload</RouterLink>
 </nav>
 </template>
