@@ -14,7 +14,7 @@ const router = createRouter({
       path: '/displayview',
       component: DisplayView
     },
-    {
+    {    
       path: '/upload',
       component: UploadView
     },
