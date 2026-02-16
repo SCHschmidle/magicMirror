@@ -12,16 +12,20 @@ onMounted(async() => {
 <h1>Dashboard</h1>
 <div>
     <table>
-        <tr>
-            <th>FileName</th>
-            <th>Volume</th>
-            <th>active</th>
-        </tr>
-        <tr v-for="file in files" :key="file" class="board">
-            <th>{{ file.name }}</th>
-            <th>{{ file.volume }}</th>
-            <th><input type="checkbox" :checked="file.active" @change="changedActive(key)"></th>
-        </tr>
+        <thead>
+            <tr>
+                <th>FileName</th>
+                <th>Volume</th>
+                <th>active</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="file in files" :key="file" class="board">
+                <td>{{ file.name }}</td>
+                <td>{{ file.volume }}</td>
+                <td><input type="checkbox" :checked="file.active" @change="changedActive(key)"></td>
+            </tr>
+        </tbody>
     </table>
 </div>
 </template>
