@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const fileData = ref([])
 onMounted(async() => {
@@ -19,6 +19,14 @@ async function changedParam(){
     })
     const data = await response.json()
 }
+
+const totalSize = computed(() => {
+    return fileData.value.reduce((sum, file) => {
+        return Math.round(((sum + Number(file.size)) /1024) *1024* 100)/100
+    }, 0)
+})
+
+
 
 </script>
 <template>
@@ -45,6 +53,7 @@ async function changedParam(){
         </tbody>
     </table>
     <button @click="changedParam()">Save</button>
+    <p><strong>Total Volume:</strong> {{ totalSize }}</p>
 </div>
 </template>
 <style scoped>
