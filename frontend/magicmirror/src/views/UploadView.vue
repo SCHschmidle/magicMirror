@@ -1,10 +1,15 @@
 <template>
 <input type="file" @change="onChange" />
+<br>
+<input type="number" name="duration" id="duration" v-model="duration"> Sekunden
+<br>
 <button type="submit" @click="onSubmit">Submit</button>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 let selectedFile = null
+const duration = ref(30)
 
 const onChange = (e) => {
   selectedFile = e.target.files?.[0]
@@ -20,6 +25,7 @@ const onSubmit = async () => {
   console.log('uploading')
   const form = new FormData()
   form.append("file", selectedFile)
+  form.append("duration", duration.value)
 
   const res = await fetch("http://localhost:8000/upload/single", {
     method: "POST",
@@ -34,6 +40,7 @@ const onSubmit = async () => {
 
   const data = await res.json()
   console.log("Upload erfolgreich:", data)
-  selectedFile = null // Datei-Auswahl zurücksetzen
+  selectedFile = null 
+  duration.value = 30
 }
 </script>

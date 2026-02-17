@@ -6,19 +6,18 @@ onMounted(async() => {
     console.log('HomeView mounted')
     const response = await fetch('http://localhost:8000/filedata')
     fileData.value = await response.json()
-    console.log(fileData.value)
 })
 
-async function changedActive (key){
+async function changedParam(){
+    
     const response = await fetch('http://localhost:8000/activeupdate', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ "key": key })
+        body: JSON.stringify(fileData.value)
     })
     const data = await response.json()
-    console.log(data)
 }
 
 </script>
@@ -31,6 +30,7 @@ async function changedActive (key){
                 <th>index</th>
                 <th>FileName</th>
                 <th>Volume</th>
+                <th>Duration</th>
                 <th>active</th>
             </tr>
         </thead>
@@ -39,9 +39,12 @@ async function changedActive (key){
                 <td>{{ file.id }}</td>
                 <td>{{ file.name }}</td>
                 <td>{{ file.size }}</td>
-                <td><input type="checkbox" :checked="file.active" @change="changedActive(fileData.indexOf(file))"></td>            </tr>
+                <td><input type="number"v-model="file.duration"></td>
+                <td><input type="checkbox" v-model="file.active"></td>
+            </tr>
         </tbody>
     </table>
+    <button @click="changedParam()">Save</button>
 </div>
 </template>
 <style scoped>

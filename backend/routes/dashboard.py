@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, File, UploadFile, HTTPException
+from fastapi import APIRouter, Request, File, UploadFile, HTTPException, Form
 from fastapi.responses import HTMLResponse, JSONResponse  
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -16,7 +16,8 @@ for file in folder.glob("*"):
     filedata_storage.append({'id': index,
                          'name': file.name,
                          'size': round(file.stat().st_size/1024/1024,3),
-                         'active': active})
+                         'active': active,
+                         'duration': 30})
     index+=1
 
 
@@ -25,16 +26,14 @@ UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 class ActiveUpdateRequest(BaseModel):
-    key: int
-
-
+    data: list[dict]
 
 @router.get("/dashboard", response_class=HTMLResponse )
 async def main(request: Request):
      return templates.TemplateResponse("dashboard.html", {"request": request})
 
 @router.post("/upload/single")
-async def upload_single_file(file: UploadFile = File(...)):
+async def upload_single_file(file: UploadFile = File(...),duration: int = Form(...)):
     active = False
     if file.filename == "":
         raise HTTPException(status_code=400, detail="No file selected")
@@ -46,13 +45,15 @@ async def upload_single_file(file: UploadFile = File(...)):
 
     filedata_storage.append({"name": file.filename,
         "size": file.size,
-        "active": False,})
+        "active": False,
+        "duration": duration})
     return {
         "filename": file.filename,
         "content_type": file.content_type,
         "size": file.size,
         "location": str(file_path),
         "active": active,
+        "duration": duration
     }
 
 
@@ -69,11 +70,12 @@ async def getdata():
     return filedata_storage
 
 @router.post("/activeupdate")
-async def activeupdate(request: ActiveUpdateRequest):
-    key = request.key
+async def activeupdate(file_data: list[dict]):
     global filedata_storage
-    filedata_storage[key]['active']= not(filedata_storage[key]['active'])
-    return f"updated {key} to {filedata_storage[key]['active']}"
+    for index, file in enumerate(file_data):
+        filedata_storage[index]['active']= file['active']
+        filedata_storage[index]['duration']= file['duration']
+    return f"Updated {index} to {filedata_storage[index]['active']}"
 
 @router.get("/display")
 async def display_view():
