@@ -26,9 +26,14 @@ onMounted(async () => {
 
 const startSlideshow = () => {
   if (intervalId) clearInterval(intervalId);
+
+  let duration = media.value[currentIndex.value]?.duration || 10;
+  currentDuration.value = duration * 1000;
+
   intervalId = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % media.value.length;
-    currentDuration.value = 10000;
+    clearInterval(intervalId);
+    startSlideshow();
   }, currentDuration.value);
 };
 
