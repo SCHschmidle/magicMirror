@@ -10,19 +10,8 @@ import json
 
 router = APIRouter()
 
-active = False
-filedata_storage= []
-index=0
 csv_path = Path("storage.csv")
-filedata_storage.clear()
-folder = Path("images")
-for file in folder.glob("*"):
-    filedata_storage.append({'id': index,
-                         'name': file.name,
-                         'size': round(file.stat().st_size/1024/1024,3),
-                         'active': active,
-                         'duration': 30})
-    index+=1
+
 
 
 UPLOAD_DIR = Path(__file__).parent.parent / "images"
@@ -96,8 +85,20 @@ async def delete_file(fileId: str):
     df["id"] = range(len(df))
     df.to_csv(csv_path, index=False)
 
+@router.get("/setdata")
 def set_csv():
-    df = pd.DataFrame(filedata_storage)
+    filedata= []
+    index=0
+    folder = Path("images")
+    for file in folder.glob("*"):
+        filedata.append({
+            'id': index,
+            'name': file.name,
+            'size': round(file.stat().st_size/1024/1024,3),
+            'active': False,
+            'duration': 30})
+    index+=1
+    df = pd.DataFrame(filedata)
     df.to_csv(csv_path, index=False)
     return {"status": 200}
 
