@@ -48,21 +48,22 @@ const totalSize = computed(() => {
     <table>
         <thead>
             <tr>
-                <th>index</th>
-                <th>FileName</th>
+                <th>Index</th>
+                <th>File Name</th>
                 <th>Volume</th>
                 <th>Duration</th>
-                <th>active</th>
+                <th>Active</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="file in fileData" :key="file.id" class="board">
                 <td>{{ file.id }}</td>
                 <td>{{ file.name }}</td>
-                <td>{{ file.size }}</td>
+                <td>{{ file.size }} MB</td>
                 <td><input type="number"v-model="file.duration"></td>
                 <td><input type="checkbox" v-model="file.active"></td>
-                <button @click="deleteFile(file.name)">Löschen</button>
+                <td><button @click="deleteFile(file.name)">Löschen</button></td>
             </tr>
         </tbody>
     </table>
