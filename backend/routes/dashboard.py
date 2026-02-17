@@ -14,7 +14,8 @@ active = False
 filedata_storage= []
 index=0
 csv_path = Path("storage.csv")
-folder = Path("../frontend/magicmirror/public/media")
+filedata_storage.clear()
+folder = Path("images")
 for file in folder.glob("*"):
     filedata_storage.append({'id': index,
                          'name': file.name,
@@ -24,7 +25,8 @@ for file in folder.glob("*"):
     index+=1
 
 
-UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "media"
+UPLOAD_DIR = Path(__file__).parent.parent / "images"
+folder = UPLOAD_DIR
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -58,12 +60,17 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
     return {
         "status": 200
     }
+@router.get("/images")
+def images():
+    files = [p.name for p in UPLOAD_DIR.iterdir() if p.is_file()]
+    return [{"name": f} for f in files]
 
 @router.get("/filedata")
 async def getdata():
     df = pd.read_csv(csv_path)
     json_df = df.to_dict(orient="records")
     return json_df
+
 
 @router.post("/activeupdate")
 async def activeupdate(file_data: list[dict]):

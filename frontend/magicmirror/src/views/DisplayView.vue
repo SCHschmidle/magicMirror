@@ -55,12 +55,12 @@ onUnmounted(() => {
     <div v-if="media.length > 0" class="display-media">
       <img
         v-if="!isVideo(media[currentIndex].name)"
-        :src="`../../public/media/${media[currentIndex].name}`"
+        :src="`../../../../backend/images/${media[currentIndex].name}`"
         :alt="media[currentIndex].name"
       />
       <video
         v-else
-        :src="`../../public/media/${media[currentIndex].name}`"
+        :src="`../../../../backend/images/${media[currentIndex].name}`"
         autoplay
         muted
         playsinline
