@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const fileData = ref([])
 onMounted(async() => {
@@ -20,6 +20,14 @@ async function changedActive (key){
     const data = await response.json()
     console.log(data)
 }
+
+const totalSize = computed(() => {
+    return fileData.value.reduce((sum, file) => {
+        return Math.round(((sum + Number(file.size)) /1024) *1024* 100)/100
+    }, 0)
+})
+
+
 
 </script>
 <template>
@@ -42,6 +50,7 @@ async function changedActive (key){
                 <td><input type="checkbox" :checked="file.active" @change="changedActive(fileData.indexOf(file))"></td>            </tr>
         </tbody>
     </table>
+    <p><strong>Total Volume:</strong> {{ totalSize }}</p>
 </div>
 </template>
 <style scoped>
