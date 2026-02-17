@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 from pydantic import BaseModel
 import os
+import csv
 
 router = APIRouter()
 
@@ -44,10 +45,13 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    filedata_storage.append({"name": file.filename,
+    filedata_storage.append({
+        "name": file.filename,
         "size": file.size,
         "active": False,
         "duration": duration})
+  
+    
     return {
         "filename": file.filename,
         "content_type": file.content_type,
