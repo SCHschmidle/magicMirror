@@ -21,6 +21,17 @@ async function changedActive (key){
     console.log(data)
 }
 
+async function deleteFile(fileId){
+    const response = await fetch(`http://localhost:8000/deletefile/${fileId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        
+    })
+    fileData.value = fileData.value.filter(file => file.id !== fileId)
+}
+
 const totalSize = computed(() => {
     return fileData.value.reduce((sum, file) => {
         return Math.round(((sum + Number(file.size)) /1024) *1024* 100)/100
@@ -47,7 +58,9 @@ const totalSize = computed(() => {
                 <td>{{ file.id }}</td>
                 <td>{{ file.name }}</td>
                 <td>{{ file.size }}</td>
-                <td><input type="checkbox" :checked="file.active" @change="changedActive(fileData.indexOf(file))"></td>            </tr>
+                <td><input type="checkbox" :checked="file.active" @change="changedActive(fileData.indexOf(file))"></td>
+                <button @click="deleteFile(file.name)">Löschen</button>
+            </tr>
         </tbody>
     </table>
     <p><strong>Total Volume:</strong> {{ totalSize }}</p>
