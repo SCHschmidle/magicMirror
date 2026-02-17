@@ -47,7 +47,7 @@ onUnmounted(() => {
 
 <template>
   <div class="display-view">
-    <div v-if="media.length > 0">
+    <div v-if="media.length > 0" class="display-media">
       <img
         v-if="!isVideo(media[currentIndex].name)"
         :src="`../../public/media/${media[currentIndex].name}`"
@@ -56,9 +56,9 @@ onUnmounted(() => {
       <video
         v-else
         :src="`../../public/media/${media[currentIndex].name}`"
-        controls
         autoplay
         muted
+        playsinline
         @loadedmetadata="onVideoLoaded"
       ></video>
     </div>
