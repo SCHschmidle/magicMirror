@@ -225,6 +225,16 @@ nav a.router-link-active {
   color: #007aff;
 }
 
+.delete-btn {
+  background-color: #e53935; 
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.delete-btn:hover {
+  background-color: #b71c1c;
+}
+
 @media (max-width: 768px) {
   nav a {
     display: block;

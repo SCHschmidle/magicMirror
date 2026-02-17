@@ -5,7 +5,6 @@ from pathlib import Path
 import shutil
 from pydantic import BaseModel
 import os
-import csv
 
 router = APIRouter()
 
@@ -13,7 +12,7 @@ active = False
 filedata_storage= []
 index=0
 filedata_storage.clear()
-folder = Path("images")
+folder = Path("../frontend/magicmirror/public/media")
 for file in folder.glob("*"):
     filedata_storage.append({'id': index,
                          'name': file.name,
@@ -23,8 +22,7 @@ for file in folder.glob("*"):
     index+=1
 
 
-UPLOAD_DIR = Path(__file__).parent.parent / "images"
-folder = UPLOAD_DIR
+UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "media"
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -46,13 +44,10 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    filedata_storage.append({
-        "name": file.filename,
+    filedata_storage.append({"name": file.filename,
         "size": file.size,
         "active": False,
         "duration": duration})
-  
-    
     return {
         "filename": file.filename,
         "content_type": file.content_type,
@@ -63,17 +58,11 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
     }
 
 
-@router.get("/images")
-def images():
-    files = [p.name for p in UPLOAD_DIR.iterdir() if p.is_file()]
-    return [{"name": f} for f in files]
-
-
 @router.get("/filedata")
 async def getdata():
     global filedata_storage 
     filedata= []
-    folder = Path("images")
+    folder = Path("../frontend/magicmirror/public/media")
     for index, file in enumerate(folder.glob("*")):
         filedata.append({'id':index,
                          'name': file.name,

@@ -51,9 +51,9 @@ const totalSize = computed(() => {
             <tr>
                 <th>Index</th>
                 <th>File Name</th>
-                <th>Volume</th>
-                <th>Duration</th>
-                <th>Active</th>
+                <th>Grösse</th>
+                <th>Länge in Sekunden</th>
+                <th>Status</th>
                 <th>Delete</th>
             </tr>
         </thead>
@@ -64,7 +64,7 @@ const totalSize = computed(() => {
                 <td>{{ file.size }} MB</td>
                 <td><input type="number"v-model="file.duration"></td>
                 <td><input type="checkbox" v-model="file.active"></td>
-                <td><button @click="deleteFile(file.name)">Löschen</button></td>
+                <td><button @click="deleteFile(file.name)" class="delete-btn">Löschen</button></td>
             </tr>
         </tbody>
     </table>
