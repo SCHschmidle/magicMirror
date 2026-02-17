@@ -66,7 +66,8 @@ async def getdata():
         filedata.append({'id':index,
                          'name': file.name,
                          'size': round(file.stat().st_size/1024/1024,3),
-                         'active': filedata_storage[index]['active']})
+                         'active': filedata_storage[index]['active'],
+                         'duration': filedata_storage[index]['duration']})
     filedata_storage=filedata
     return filedata
 
