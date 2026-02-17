@@ -1,11 +1,3 @@
-<template>
-<input type="file" @change="onChange" />
-<br>
-<input type="number" name="duration" id="duration" v-model="duration"> Sekunden
-<br>
-<button type="submit" @click="onSubmit">Submit</button>
-</template>
-
 <script setup>
 import { ref } from 'vue'
 let selectedFile = null
@@ -13,7 +5,15 @@ const duration = ref(30)
 
 const onChange = (e) => {
   selectedFile = e.target.files?.[0]
-  console.log('Datei ausgewählt:', selectedFile?.name)
+  if (selectedFile && selectedFile.type.startsWith('video/')) {
+    const video = document.createElement('video')
+    video.preload = 'metadata'
+    video.onloadedmetadata = () => {
+      duration.value = Math.round(video.duration)
+      URL.revokeObjectURL(video.src)
+    }
+    video.src = URL.createObjectURL(selectedFile)
+  }
 }
 
 const onSubmit = async () => {
@@ -44,3 +44,11 @@ const onSubmit = async () => {
   duration.value = 30
 }
 </script>
+
+<template>
+  <input type="file" @change="onChange" />
+  <br>
+  <input type="number" name="duration" id="duration" v-model="duration"> Sekunden
+  <br>
+  <button type="submit" @click="onSubmit">Submit</button>
+</template>
