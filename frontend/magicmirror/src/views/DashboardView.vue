@@ -30,6 +30,7 @@ async function deleteFile(fileId){
         
     })
     fileData.value = fileData.value.filter(file => file.id !== fileId)
+    location.reload()
 }
 
 
