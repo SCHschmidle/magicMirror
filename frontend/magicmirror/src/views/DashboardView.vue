@@ -18,7 +18,20 @@ async function changedParam(){
         body: JSON.stringify(fileData.value)
     })
     const data = await response.json()
+
 }
+
+async function deleteFile(fileId){
+    const response = await fetch(`http://localhost:8000/deletefile/${fileId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        
+    })
+    fileData.value = fileData.value.filter(file => file.id !== fileId)
+}
+
 
 const totalSize = computed(() => {
     return fileData.value.reduce((sum, file) => {
@@ -35,20 +48,22 @@ const totalSize = computed(() => {
     <table>
         <thead>
             <tr>
-                <th>index</th>
-                <th>FileName</th>
+                <th>Index</th>
+                <th>File Name</th>
                 <th>Volume</th>
                 <th>Duration</th>
-                <th>active</th>
+                <th>Active</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="file in fileData" :key="file.id" class="board">
                 <td>{{ file.id }}</td>
                 <td>{{ file.name }}</td>
-                <td>{{ file.size }}</td>
+                <td>{{ file.size }} MB</td>
                 <td><input type="number"v-model="file.duration"></td>
                 <td><input type="checkbox" v-model="file.active"></td>
+                <td><button @click="deleteFile(file.name)">Löschen</button></td>
             </tr>
         </tbody>
     </table>

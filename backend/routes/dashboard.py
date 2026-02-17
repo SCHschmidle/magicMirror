@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import shutil
 from pydantic import BaseModel
+import os
 
 router = APIRouter()
 
@@ -86,3 +87,8 @@ async def display_view():
         if f.is_file() and f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.avi', '.mov', '.webm']:
             media_files.append(f.name)
     return JSONResponse(content={"media": media_files})
+
+@router.get("/deletefile/{fileId}")
+async def delete_file(fileId: str):
+    path = UPLOAD_DIR / fileId
+    os.remove(path)
