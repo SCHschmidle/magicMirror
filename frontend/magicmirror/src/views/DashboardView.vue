@@ -6,19 +6,19 @@ onMounted(async() => {
     console.log('HomeView mounted')
     const response = await fetch('http://localhost:8000/filedata')
     fileData.value = await response.json()
-    console.log(fileData.value)
 })
 
-async function changedActive (key){
+async function changedParam(){
+    
     const response = await fetch('http://localhost:8000/activeupdate', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ "key": key })
+        body: JSON.stringify(fileData.value)
     })
     const data = await response.json()
-    console.log(data)
+
 }
 
 async function deleteFile(fileId){
@@ -31,6 +31,7 @@ async function deleteFile(fileId){
     })
     fileData.value = fileData.value.filter(file => file.id !== fileId)
 }
+
 
 const totalSize = computed(() => {
     return fileData.value.reduce((sum, file) => {
@@ -50,6 +51,7 @@ const totalSize = computed(() => {
                 <th>index</th>
                 <th>FileName</th>
                 <th>Volume</th>
+                <th>Duration</th>
                 <th>active</th>
             </tr>
         </thead>
@@ -58,11 +60,13 @@ const totalSize = computed(() => {
                 <td>{{ file.id }}</td>
                 <td>{{ file.name }}</td>
                 <td>{{ file.size }}</td>
-                <td><input type="checkbox" :checked="file.active" @change="changedActive(fileData.indexOf(file))"></td>
+                <td><input type="number"v-model="file.duration"></td>
+                <td><input type="checkbox" v-model="file.active"></td>
                 <button @click="deleteFile(file.name)">Löschen</button>
             </tr>
         </tbody>
     </table>
+    <button @click="changedParam()">Save</button>
     <p><strong>Total Volume:</strong> {{ totalSize }}</p>
 </div>
 </template>

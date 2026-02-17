@@ -42,7 +42,7 @@ input, textarea {
   border-radius: 8px;
   padding: 0.75rem;
   font-size: 1rem;
-  width: 100%;
+  width: 500px;
 }
 
 input:focus, textarea:focus {
