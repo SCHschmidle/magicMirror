@@ -67,7 +67,8 @@ async def getdata():
                          'name': file.name,
                          'size': round(file.stat().st_size/1024/1024,3),
                          'active': filedata_storage[index]['active']})
-    return filedata_storage
+    filedata_storage=filedata
+    return filedata
 
 @router.post("/activeupdate")
 async def activeupdate(file_data: list[dict]):
