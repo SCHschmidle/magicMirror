@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 from pydantic import BaseModel
 import os
+import csv
 import pandas as pd
 import json
 
@@ -13,10 +14,7 @@ router = APIRouter()
 
 csv_path = Path("storage/storage.csv")
 
-
-
-UPLOAD_DIR = Path(__file__).parent.parent / "images"
-folder = UPLOAD_DIR
+UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "media"
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -37,7 +35,7 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Lisst das CSV aus, fügt eine neue zeile hinzu und schreibt das CSV neu
+        # Lisst das CSV aus, fügt eine neue zeile hinzu und schreibt das CSV neu
     df = pd.read_csv(csv_path)
     df.loc[len(df)] = {
         "id": len(df),
@@ -46,14 +44,13 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
         "active": False,
         "duration": duration}
     df.to_csv(csv_path, index=False)
+    
   
+    
     return {
         "status": 200
     }
-@router.get("/images")
-def images():
-    files = [p.name for p in UPLOAD_DIR.iterdir() if p.is_file()]
-    return [{"name": f} for f in files]
+
 
 @router.get("/filedata")
 async def getdata():

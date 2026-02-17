@@ -51,9 +51,9 @@ const totalSize = computed(() => {
             <tr>
                 <th>Index</th>
                 <th>File Name</th>
-                <th>Volume</th>
-                <th>Duration</th>
-                <th>Active</th>
+                <th>Grösse</th>
+                <th>Länge in Sekunden</th>
+                <th>Status</th>
                 <th>Delete</th>
             </tr>
         </thead>

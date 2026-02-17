@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 let selectedFile = null
 const duration = ref(30)
+const router = useRouter()
 
 const onChange = (e) => {
   selectedFile = e.target.files?.[0]
@@ -42,6 +44,9 @@ const onSubmit = async () => {
   console.log("Upload erfolgreich:", data)
   selectedFile = null 
   duration.value = 30
+
+  router.push('/dashboard')
+
 }
 </script>
 

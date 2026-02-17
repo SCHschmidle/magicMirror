@@ -30,6 +30,7 @@ const startSlideshow = () => {
   let duration = media.value[currentIndex.value]?.duration || 10;
   currentDuration.value = duration * 1000;
 
+
   intervalId = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % media.value.length;
     clearInterval(intervalId);
@@ -55,12 +56,12 @@ onUnmounted(() => {
     <div v-if="media.length > 0" class="display-media">
       <img
         v-if="!isVideo(media[currentIndex].name)"
-        :src="`../../../../backend/images/${media[currentIndex].name}`"
+        :src="`../../public/media/${media[currentIndex].name}`"
         :alt="media[currentIndex].name"
       />
       <video
         v-else
-        :src="`../../../../backend/images/${media[currentIndex].name}`"
+        :src="`../../public/media/${media[currentIndex].name}`"
         autoplay
         muted
         playsinline
