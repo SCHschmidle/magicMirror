@@ -64,7 +64,7 @@ const totalSize = computed(() => {
                 <td>{{ file.size }} MB</td>
                 <td><input type="number"v-model="file.duration"></td>
                 <td><input type="checkbox" v-model="file.active"></td>
-                <td><button @click="deleteFile(file.name)">Löschen</button></td>
+                <td><button @click="deleteFile(file.id)">Löschen</button></td>
             </tr>
         </tbody>
     </table>

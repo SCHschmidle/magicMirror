@@ -5,14 +5,15 @@ from pathlib import Path
 import shutil
 from pydantic import BaseModel
 import os
-import csv
+import pandas as pd
+import json
 
 router = APIRouter()
 
 active = False
 filedata_storage= []
 index=0
-filedata_storage.clear()
+csv_path = Path("storage.csv")
 folder = Path("../frontend/magicmirror/public/media")
 for file in folder.glob("*"):
     filedata_storage.append({'id': index,
@@ -36,7 +37,6 @@ async def main(request: Request):
 
 @router.post("/upload/single")
 async def upload_single_file(file: UploadFile = File(...),duration: int = Form(...)):
-    active = False
     if file.filename == "":
         raise HTTPException(status_code=400, detail="No file selected")
 
@@ -45,44 +45,31 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    filedata_storage.append({
+    # Lisst das CSV aus, fügt eine neue zeile hinzu und schreibt das CSV neu
+    df = pd.read_csv(csv_path)
+    df.loc[len(df)] = {
+        "id": len(df),
         "name": file.filename,
         "size": file.size,
         "active": False,
-        "duration": duration})
+        "duration": duration}
+    df.to_csv(csv_path, index=False)
   
-    
     return {
-        "filename": file.filename,
-        "content_type": file.content_type,
-        "size": file.size,
-        "location": str(file_path),
-        "active": active,
-        "duration": duration
+        "status": 200
     }
-
 
 @router.get("/filedata")
 async def getdata():
-    global filedata_storage 
-    filedata= []
-    folder = Path("../frontend/magicmirror/public/media")
-    for index, file in enumerate(folder.glob("*")):
-        filedata.append({'id':index,
-                         'name': file.name,
-                         'size': round(file.stat().st_size/1024/1024,3),
-                         'active': filedata_storage[index]['active'],
-                         'duration': filedata_storage[index]['duration']})
-    filedata_storage=filedata
-    return filedata
+    df = pd.read_csv(csv_path)
+    json_df = df.to_dict(orient="records")
+    return json_df
 
 @router.post("/activeupdate")
 async def activeupdate(file_data: list[dict]):
-    global filedata_storage
-    for index, file in enumerate(file_data):
-        filedata_storage[index]['active']= file['active']
-        filedata_storage[index]['duration']= file['duration']
-    return f"Updated {index} to {filedata_storage[index]['active']}"
+    df = pd.DataFrame(file_data)
+    df.to_csv(csv_path, index=False)
+    return {"status": 200}
 
 @router.get("/display")
 async def display_view():
@@ -94,5 +81,20 @@ async def display_view():
 
 @router.get("/deletefile/{fileId}")
 async def delete_file(fileId: str):
-    path = UPLOAD_DIR / fileId
+    df = pd.read_csv(csv_path)
+    fileName=df.loc[int(fileId), "name"]
+    path = UPLOAD_DIR / fileName
     os.remove(path)
+    df = df.drop(int(fileId))
+    df["id"] = range(len(df))
+    df.to_csv(csv_path, index=False)
+
+def set_csv():
+    df = pd.DataFrame(filedata_storage)
+    df.to_csv(csv_path, index=False)
+    return {"status": 200}
+
+def update_csv(id, key, value):
+    df = pd.read_csv(csv_path)
+    df.loc[id, key] = value
+    df.to_csv(csv_path, index=False)
