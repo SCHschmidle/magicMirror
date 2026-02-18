@@ -9,6 +9,7 @@ import os
 import csv
 import pandas as pd
 import json
+from datetime import datetime
 
 router = APIRouter()
 
@@ -26,7 +27,12 @@ async def main(request: Request):
      return templates.TemplateResponse("dashboard.html", {"request": request})
 
 @router.post("/upload/single")
-async def upload_single_file(file: UploadFile = File(...),duration: int = Form(...)):
+async def upload_single_file(
+    file: UploadFile = File(...),
+    duration: int = Form(...),
+    scheduled_date: str = Form(None),   
+    scheduled_time: str = Form(None)    
+):
     if file.filename == "":
         raise HTTPException(status_code=400, detail="No file selected")
 
@@ -42,10 +48,11 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
         "name": file.filename,
         "size": round(file.size/1024/1024,3),
         "active": False,
-        "duration": duration}
+        "duration": duration,
+        "scheduled_date": scheduled_date,
+        "scheduled_time": scheduled_time
+    }
     df.to_csv(csv_path, index=False)
-    
-  
     
     return {
         "status": 200
@@ -104,3 +111,17 @@ def update_csv(id, key, value):
     df = pd.read_csv(csv_path)
     df.loc[id, key] = value
     df.to_csv(csv_path, index=False)
+
+@router.get("/scheduled_media")
+async def get_scheduled_media():
+    now = datetime.now()
+    today = now.strftime("%Y-%m-%d")
+    current_time = now.strftime("%H:%M")
+    df = pd.read_csv(csv_path)
+    scheduled = df[
+        (df["scheduled_date"] == today) &
+        (df["scheduled_time"] == current_time)
+    ]
+    if not scheduled.empty:
+        return {"media": scheduled.iloc[0].to_dict()}
+    return {"media": None}
