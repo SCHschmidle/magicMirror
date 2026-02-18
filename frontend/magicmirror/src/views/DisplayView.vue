@@ -55,6 +55,41 @@ const onVideoLoaded = (event) => {
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
 });
+
+async function setActiveMedia(id) {
+  const response = await fetch('http://127.0.0.1:8000/filedata');
+  const data = await response.json();
+  const updated = data.map(item => ({
+    ...item,
+    active: item.id === id
+  }));
+  await fetch('http://127.0.0.1:8000/activeupdate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updated)
+  });
+}
+async function checkScheduledMedia() {
+  const response = await fetch('http://127.0.0.1:8000/scheduled-media');
+  const data = await response.json();
+  if (data.media) {
+    await setActiveMedia(data.media.id);
+  } else {
+    await setActiveMedia(-1);
+  }
+  const filedataResponse = await fetch('http://127.0.0.1:8000/filedata');
+  const filedata = await filedataResponse.json();
+  media.value = filedata.filter(item => item.active === true);
+  currentIndex.value = 0;
+  if (media.value.length > 0) {
+    startSlideshow();
+  } else {
+    if (intervalId) clearInterval(intervalId);
+  }
+}
+
+setInterval(checkScheduledMedia, 60000);
+
 </script>
 
 <template>
