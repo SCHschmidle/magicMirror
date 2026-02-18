@@ -95,7 +95,7 @@ def set_csv():
             'size': round(file.stat().st_size/1024/1024,3),
             'active': False,
             'duration': 30})
-    index+=1
+        index+=1
     df = pd.DataFrame(filedata)
     df.to_csv(csv_path, index=False)
     return {"status": 200}
