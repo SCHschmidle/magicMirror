@@ -3,6 +3,8 @@ import sys
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -22,5 +24,8 @@ app.add_middleware(
 
 app.include_router(dashboard_router)
 app.include_router(display_router)
+
+
+app.mount("/images", StaticFiles(directory="images"), name="media")
 
 
