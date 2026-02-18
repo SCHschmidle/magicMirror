@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Request, File, UploadFile, HTTPException, Form
 from fastapi.responses import HTMLResponse, JSONResponse  
 from fastapi.templating import Jinja2Templates
-
 from pathlib import Path
 import shutil
 from pydantic import BaseModel
@@ -49,8 +48,8 @@ async def upload_single_file(
         "size": file.size,
         "active": False,
         "duration": duration,
-        "scheduled_date": scheduled_date,
-        "scheduled_time": scheduled_time
+        "scheduled_date": scheduled_date if scheduled_date else " None",
+        "scheduled_time": scheduled_time if scheduled_time else " None"
     }
     df.to_csv(csv_path, index=False)
     
