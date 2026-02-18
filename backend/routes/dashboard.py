@@ -100,9 +100,11 @@ def set_csv():
             'name': file.name,
             'size': round(file.stat().st_size/1024/1024,3),
             'active': False,
-            'duration': 30})
+            'duration': 30,
+            'scheduled_date': " None",
+            'scheduled_time': " None"})
         index+=1
-    df = pd.DataFrame(filedata,columns=["id", "name", "size", "active", "duration"])
+    df = pd.DataFrame(filedata,columns=["id", "name", "size", "active", "duration","scheduled_date", "scheduled_time"])
     df.to_csv(csv_path, index=False)
     return {"status": 200}
 
