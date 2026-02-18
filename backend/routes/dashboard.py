@@ -103,7 +103,7 @@ def set_csv():
             'active': False,
             'duration': 30})
         index+=1
-    df = pd.DataFrame(filedata)
+    df = pd.DataFrame(filedata,columns=["id", "name", "size", "active", "duration"])
     df.to_csv(csv_path, index=False)
     return {"status": 200}
 
