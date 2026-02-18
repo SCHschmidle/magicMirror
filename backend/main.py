@@ -4,12 +4,9 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-import os
+from routes.dashboard import router as dashboard_router
 
 sys.path.insert(0, str(Path(__file__).parent))
-
-from routes.display import router as display_router
-from routes.dashboard import router as dashboard_router
 
 
 app = FastAPI()
@@ -23,7 +20,6 @@ app.add_middleware(
 )
 
 app.include_router(dashboard_router)
-app.include_router(display_router)
 
 
 app.mount("/images", StaticFiles(directory="images"), name="media")
