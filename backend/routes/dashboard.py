@@ -87,7 +87,7 @@ async def delete_file(fileId: str):
 def set_csv():
     filedata= []
     index=0
-    folder = Path("images")
+    folder = UPLOAD_DIR
     for file in folder.glob("*"):
         filedata.append({
             'id': index,
