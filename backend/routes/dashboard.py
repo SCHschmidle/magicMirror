@@ -100,7 +100,7 @@ def set_csv():
     df.to_csv(csv_path, index=False)
     return {"status": 200}
 
-
+router.mount("/media", StaticFiles(directory="images"), name="media")
 
 def update_csv(id, key, value):
     df = pd.read_csv(csv_path)
