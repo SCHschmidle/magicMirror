@@ -12,16 +12,8 @@ const isVideo = (filename) => {
 };
 
 onMounted(async () => {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/filedata');
-    const data = await response.json();
-    media.value = data.filter(item => item.active === true);
-    if (media.value.length > 0) {
-      startSlideshow();
-    }
-  } catch (error) {
-    console.error('Fehler beim Laden der Medien:', error);
-  }
+ get_data()
+ startSlideshow()
 });
 
 const startSlideshow = () => {
@@ -30,6 +22,7 @@ const startSlideshow = () => {
   let duration = media.value[currentIndex.value]?.duration || 10;
   currentDuration.value = duration * 1000;
 
+  get_data()
 
   intervalId = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % media.value.length;
@@ -37,6 +30,19 @@ const startSlideshow = () => {
     startSlideshow();
   }, currentDuration.value);
 };
+
+async function get_data(){
+    try {
+    const response = await fetch('http://127.0.0.1:8000/filedata');
+    const data = await response.json();
+    media.value = data.filter(item => item.active === true);
+    if (media.value.length > 0) {
+      
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der Medien:', error);
+  }
+}
 
 const onVideoLoaded = (event) => {
   currentDuration.value = event.target.duration * 1000;
