@@ -21,7 +21,6 @@ app.add_middleware(
 
 app.include_router(dashboard_router)
 
-
 app.mount("/images", StaticFiles(directory="images"), name="media")
 
 
