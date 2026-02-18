@@ -52,16 +52,17 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <div v-if="true">
   <div class="display-view">
     <div v-if="media.length > 0" class="display-media">
       <img
         v-if="!isVideo(media[currentIndex].name)"
-        :src="`../../public/media/${media[currentIndex].name}`"
+        :src="`http://127.0.0.1:8000/images/${media[currentIndex].name}`"
         :alt="media[currentIndex].name"
       />
       <video
         v-else
-        :src="`../../public/media/${media[currentIndex].name}`"
+        :src="`http://127.0.0.1:8000/images/${media[currentIndex].name}`"
         autoplay
         muted
         playsinline
@@ -71,5 +72,6 @@ onUnmounted(() => {
     <div v-else>
       Keine aktiven Medien vorhanden.
     </div>
+  </div>
   </div>
 </template>

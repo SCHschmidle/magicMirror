@@ -14,7 +14,7 @@ router = APIRouter()
 
 csv_path = Path("storage/storage.csv")
 
-UPLOAD_DIR = Path(__file__).parent.parent.parent / "frontend" / "magicmirror" / "public" / "media"
+UPLOAD_DIR = Path(__file__).parent.parent / "images" 
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -40,7 +40,7 @@ async def upload_single_file(file: UploadFile = File(...),duration: int = Form(.
     df.loc[len(df)] = {
         "id": len(df),
         "name": file.filename,
-        "size": file.size,
+        "size": round(file.size/1024/1024,3),
         "active": False,
         "duration": duration}
     df.to_csv(csv_path, index=False)
@@ -69,7 +69,7 @@ async def activeupdate(file_data: list[dict]):
 async def display_view():
     media_files = []
     for f in UPLOAD_DIR.iterdir():
-        if f.is_file() and f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.avi', '.mov', '.webm']:
+        if f.is_file() and f.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.avi', '.mov', '.webm', 'webp']:
             media_files.append(f.name)
     return JSONResponse(content={"media": media_files})
 
