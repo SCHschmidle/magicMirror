@@ -5,10 +5,9 @@ from pathlib import Path
 import shutil
 from pydantic import BaseModel
 import os
-import csv
 import pandas as pd
-import json
 from datetime import datetime
+import csv
 
 router = APIRouter()
 
@@ -111,16 +110,20 @@ def update_csv(id, key, value):
     df.loc[id, key] = value
     df.to_csv(csv_path, index=False)
 
-@router.get("/scheduled_media")
+@router.get("/scheduled-media")
 async def get_scheduled_media():
-    now = datetime.now()
-    today = now.strftime("%Y-%m-%d")
-    current_time = now.strftime("%H:%M")
-    df = pd.read_csv(csv_path)
-    scheduled = df[
-        (df["scheduled_date"] == today) &
-        (df["scheduled_time"] == current_time)
-    ]
-    if not scheduled.empty:
-        return {"media": scheduled.iloc[0].to_dict()}
-    return {"media": None}
+    try:
+        now = datetime.now()
+        today = now.strftime("%Y-%m-%d")
+        current_time = now.strftime("%H:%M")
+        df = pd.read_csv(csv_path)
+        scheduled = df[
+            (df["scheduled_date"] == today) &
+            (df["scheduled_time"] == current_time)
+        ]
+        if not scheduled.empty:
+            return {"media": scheduled.iloc[0].to_dict()}
+        return {"media": None}
+    except Exception as e:
+        return {"error": str(e)}
+
