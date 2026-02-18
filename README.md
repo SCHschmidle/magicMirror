@@ -42,3 +42,6 @@ Ein einfaches Projekt für einen "Magic Mirror" mit Bild-Upload und -Anzeige. Da
 
 ## Lizenz
 Dieses Projekt ist Open-Source. Verwende es frei, aber auf eigene Gefahr.
+
+## Setup
+Bevor die Webseite funktioniert, muss der Folder backend/routes/storage und dort drinn muss das file storage.csv erstellt werden.

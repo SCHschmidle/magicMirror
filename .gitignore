@@ -143,3 +143,4 @@ tmp/
 backend/images
 frontend/magicmirror/public/media
 /backend/storage
+*.csv
