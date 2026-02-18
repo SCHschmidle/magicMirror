@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, File, UploadFile, HTTPException, Form
 from fastapi.responses import HTMLResponse, JSONResponse  
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
+
 from pathlib import Path
 import shutil
 from pydantic import BaseModel
@@ -106,8 +106,6 @@ def set_csv():
     df = pd.DataFrame(filedata)
     df.to_csv(csv_path, index=False)
     return {"status": 200}
-
-router.mount("/media", StaticFiles(directory="images"), name="media")
 
 def update_csv(id, key, value):
     df = pd.read_csv(csv_path)
