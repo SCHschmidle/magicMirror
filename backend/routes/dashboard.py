@@ -48,7 +48,6 @@ async def upload_single_file(
         "active": False,
         "duration": duration,
         "scheduled_date": scheduled_date if scheduled_date else " None",
-        "scheduled_time": scheduled_time if scheduled_time else " None"
     }
     df.to_csv(csv_path, index=False)
     
@@ -120,8 +119,7 @@ async def get_scheduled_media():
         current_time = now.strftime("%H:%M")
         df = pd.read_csv(csv_path)
         scheduled = df[
-            (df["scheduled_date"] == today) &
-            (df["scheduled_time"] == current_time)
+            (df["scheduled_date"] == today)
         ]
         if not scheduled.empty:
             return {"media": scheduled.iloc[0].to_dict()}

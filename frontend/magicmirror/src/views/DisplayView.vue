@@ -102,8 +102,6 @@ function startEmptyCheck() {
 
   emptyCheckInterval = setInterval(async () => {
 
-    console.log("Prüfe alle 10 Sekunden ob Medien vorhanden sind...");
-
     await get_data();
 
     if (media.value.length > 0) {
