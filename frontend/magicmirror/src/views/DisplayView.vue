@@ -65,10 +65,7 @@ onUnmounted(() => {
 async function setActiveMedia(id) {
   const response = await fetch('http://127.0.0.1:8000/filedata');
   const data = await response.json();
-  const updated = data.map(item => ({
-    ...item,
-    active: item.id === id
-  }));
+  data[id]['active'] = 'True'
   await fetch('http://127.0.0.1:8000/activeupdate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -94,7 +91,7 @@ async function checkScheduledMedia() {
   }
 }
 
-setInterval(checkScheduledMedia, 60000);
+setInterval(checkScheduledMedia, 10000);
 
 function startEmptyCheck() {
 
