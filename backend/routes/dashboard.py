@@ -28,8 +28,7 @@ async def main(request: Request):
 async def upload_single_file(
     file: UploadFile = File(...),
     duration: int = Form(...),
-    scheduled_date: str = Form(None),   
-    scheduled_time: str = Form(None)    
+    scheduled_date: str = Form(None)    
 ):
     if file.filename == "":
         raise HTTPException(status_code=400, detail="No file selected")
@@ -99,10 +98,9 @@ def set_csv():
             'size': round(file.stat().st_size/1024/1024,3),
             'active': False,
             'duration': 30,
-            'scheduled_date': " None",
-            'scheduled_time': " None"})
+            'scheduled_date': " None"})
         index+=1
-    df = pd.DataFrame(filedata,columns=["id", "name", "size", "active", "duration","scheduled_date", "scheduled_time"])
+    df = pd.DataFrame(filedata,columns=["id", "name", "size", "active", "duration","scheduled_date"])
     df.to_csv(csv_path, index=False)
     return {"status": 200}
 
@@ -116,7 +114,6 @@ async def get_scheduled_media():
     try:
         now = datetime.now()
         today = now.strftime("%Y-%m-%d")
-        current_time = now.strftime("%H:%M")
         df = pd.read_csv(csv_path)
         scheduled = df[
             (df["scheduled_date"] == today)

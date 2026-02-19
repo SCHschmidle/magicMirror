@@ -2,15 +2,16 @@
 import { ref, onMounted, computed } from 'vue';
 
 const fileData = ref([])
+const base_url = 'http://127.0.0.1:8000'
 onMounted(async() => {
     console.log('HomeView mounted')
-    const response = await fetch('http://localhost:8000/filedata')
+    const response = await fetch(base_url+'/filedata')
     fileData.value = await response.json()
 })
 
 async function changedParam(){
     
-    const response = await fetch('http://localhost:8000/activeupdate', {
+    const response = await fetch(base_url+'/activeupdate', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -22,7 +23,7 @@ async function changedParam(){
 }
 
 async function deleteFile(fileId){
-    const response = await fetch(`http://localhost:8000/deletefile/${fileId}`, {
+    const response = await fetch(base_url+`/deletefile/${fileId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
