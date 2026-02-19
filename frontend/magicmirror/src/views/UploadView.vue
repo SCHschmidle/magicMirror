@@ -49,7 +49,7 @@ const onSubmit = async () => {
   selectedFile = null 
   duration.value = 30
 
-  router.push('/dashboard')
+  router.push('/')
 
 }
 </script>
