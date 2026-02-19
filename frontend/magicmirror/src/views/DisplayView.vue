@@ -5,6 +5,7 @@ const media = ref([]);
 const currentIndex = ref(0);
 let intervalId = null;
 const currentDuration = ref(10000);
+let emptyCheckInterval = false;
 
 const isVideo = (filename) => {
   const ext = filename.split('.').pop().toLowerCase();
@@ -19,6 +20,11 @@ onMounted(async () => {
 const startSlideshow = () => {
   if (intervalId) clearInterval(intervalId);
 
+  if (media.value.length === 0) {
+    console.log("Keine Medien vorhanden → Warte-Modus aktiv");
+    startEmptyCheck();
+    return;
+  }
   let duration = media.value[currentIndex.value]?.duration || 10;
   currentDuration.value = duration * 1000;
 
@@ -89,6 +95,29 @@ async function checkScheduledMedia() {
 }
 
 setInterval(checkScheduledMedia, 60000);
+
+function startEmptyCheck() {
+
+  if (emptyCheckInterval) return;
+
+  emptyCheckInterval = setInterval(async () => {
+
+    console.log("Prüfe alle 10 Sekunden ob Medien vorhanden sind...");
+
+    await get_data();
+
+    if (media.value.length > 0) {
+      console.log("Medien gefunden → Slideshow startet!");
+
+      clearInterval(emptyCheckInterval);
+      emptyCheckInterval = null;
+
+      currentIndex.value = 0;
+      startSlideshow();
+    }
+
+  }, 10000);
+}
 
 </script>
 
