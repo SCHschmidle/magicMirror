@@ -6,6 +6,7 @@ const currentIndex = ref(0);
 let intervalId = null;
 const currentDuration = ref(10000);
 let emptyCheckInterval = false;
+const base_url = 'http://127.0.0.1:8000'
 
 const isVideo = (filename) => {
   const ext = filename.split('.').pop().toLowerCase();
@@ -39,7 +40,7 @@ const startSlideshow = () => {
 
 async function get_data(){
     try {
-    const response = await fetch('http://127.0.0.1:8000/filedata');
+    const response = await fetch(base_url+'/filedata');
     const data = await response.json();
     media.value = data.filter(item => item.active === true);
     if (media.value.length > 0) {
@@ -63,24 +64,24 @@ onUnmounted(() => {
 });
 
 async function setActiveMedia(id) {
-  const response = await fetch('http://127.0.0.1:8000/filedata');
+  const response = await fetch(base_url+'/filedata');
   const data = await response.json();
   data[id]['active'] = 'True'
-  await fetch('http://127.0.0.1:8000/activeupdate', {
+  await fetch(base_url+'/activeupdate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updated)
   });
 }
 async function checkScheduledMedia() {
-  const response = await fetch('http://127.0.0.1:8000/scheduled-media');
+  const response = await fetch(base_url+'/scheduled-media');
   const data = await response.json();
   if (data.media) {
     await setActiveMedia(data.media.id);
   } else {
     await setActiveMedia(-1);
   }
-  const filedataResponse = await fetch('http://127.0.0.1:8000/filedata');
+  const filedataResponse = await fetch(base_url+'/filedata');
   const filedata = await filedataResponse.json();
   media.value = filedata.filter(item => item.active === true);
   currentIndex.value = 0;
