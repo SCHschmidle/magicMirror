@@ -5,7 +5,7 @@ let selectedFile = null
 const duration = ref(30)
 const router = useRouter()
 const scheduled_date = ref('')
-const base_url = 'http://127.0.0.1:8000'
+const base_url = import.meta.env.VITE_API_BASE_URL
 
 const onChange = (e) => {
   selectedFile = e.target.files?.[0]
