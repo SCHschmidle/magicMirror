@@ -87,12 +87,20 @@ async function checkScheduledMedia() {
   }
   const filedataResponse = await fetch(base_url+'/filedata');
   const filedata = await filedataResponse.json();
-  media.value = filedata.filter(item => item.active === true);
-  currentIndex.value = 0;
-  if (media.value.length > 0) {
-    startSlideshow();
-  } else {
+  const newMedia = filedata.filter(item => item.active === true);
+  const currentName = media.value[currentIndex.value]?.name;
+
+  media.value = newMedia;
+
+  const newIndex = media.value.findIndex(item => item.name === currentName);
+
+  if (media.value.length === 0) {
     if (intervalId) clearInterval(intervalId);
+    currentIndex.value = 0;
+  } else if (newIndex === -1) {
+    currentIndex.value = 0;
+  } else {
+    currentIndex.value = newIndex;
   }
 }
 
