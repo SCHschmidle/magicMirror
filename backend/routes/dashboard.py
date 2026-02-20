@@ -18,7 +18,6 @@ UPLOAD_DIR = Path(__file__).parent.parent / "images"
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 def set_csv():
-    print("running set_data1")
     filedata= []
     index=0
     folder = UPLOAD_DIR
