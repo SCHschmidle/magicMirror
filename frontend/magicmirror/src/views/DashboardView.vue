@@ -1,10 +1,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+const base_url = import.meta.env.VITE_API_BASE_URL
 
 const fileData = ref([])
-const base_url = 'http://127.0.0.1:8000'
 onMounted(async() => {
-    console.log('HomeView mounted')
     const response = await fetch(base_url+'/filedata')
     fileData.value = await response.json()
 })
@@ -61,7 +60,7 @@ const totalSize = computed(() => {
         </thead>
         <tbody>
             <tr v-for="file in fileData" :key="file.id" class="board">
-                <td>{{ file.id }}</td>
+                <td>{{ file.id + 1}}</td>
                 <td>{{ file.name }}</td>
                 <td>{{ file.size }} MB</td>
                 <td><input type="number"v-model="file.duration"></td>
