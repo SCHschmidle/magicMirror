@@ -1,3 +1,5 @@
 fastapi
-pathlib 
+pathlib
 jinja2
+pydantic
+pandas
