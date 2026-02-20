@@ -66,20 +66,24 @@ onUnmounted(() => {
 async function setActiveMedia(id) {
   const response = await fetch(base_url+'/filedata');
   const data = await response.json();
+  console.log(id);
+  console.log(data);
   data[id]['active'] = 'True'
+  console.log('send active update');
+
   await fetch(base_url+'/activeupdate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updated)
   });
+  console.log('send active update');
+  
 }
 async function checkScheduledMedia() {
   const response = await fetch(base_url+'/scheduled-media');
   const data = await response.json();
   if (data.media) {
     await setActiveMedia(data.media.id);
-  } else {
-    await setActiveMedia(-1);
   }
   const filedataResponse = await fetch(base_url+'/filedata');
   const filedata = await filedataResponse.json();
