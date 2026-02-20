@@ -6,7 +6,7 @@ const currentIndex = ref(0);
 let intervalId = null;
 const currentDuration = ref(10000);
 let emptyCheckInterval = false;
-const base_url = 'http://127.0.0.1:8000'
+const base_url = import.meta.env.VITE_API_BASE_URL
 
 const isVideo = (filename) => {
   const ext = filename.split('.').pop().toLowerCase();

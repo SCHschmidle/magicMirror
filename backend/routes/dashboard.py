@@ -17,6 +17,24 @@ UPLOAD_DIR = Path(__file__).parent.parent / "images"
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
+def set_csv():
+    filedata= []
+    index=0
+    folder = UPLOAD_DIR
+    for file in folder.glob("*"):
+        filedata.append({
+            'id': index,
+            'name': file.name,
+            'size': round(file.stat().st_size/1024/1024,3),
+            'active': False,
+            'duration': 30,
+            'scheduled_date': " None"})
+        index+=1
+    df = pd.DataFrame(filedata,columns=["id", "name", "size", "active", "duration","scheduled_date"])
+    df.to_csv(csv_path, index=False)
+
+set_csv()
+
 class ActiveUpdateRequest(BaseModel):
     data: list[dict]
 
@@ -85,24 +103,6 @@ async def delete_file(fileId: str):
     df = df.drop(int(fileId))
     df["id"] = range(len(df))
     df.to_csv(csv_path, index=False)
-
-@router.get("/setdata")
-def set_csv():
-    filedata= []
-    index=0
-    folder = UPLOAD_DIR
-    for file in folder.glob("*"):
-        filedata.append({
-            'id': index,
-            'name': file.name,
-            'size': round(file.stat().st_size/1024/1024,3),
-            'active': False,
-            'duration': 30,
-            'scheduled_date': " None"})
-        index+=1
-    df = pd.DataFrame(filedata,columns=["id", "name", "size", "active", "duration","scheduled_date"])
-    df.to_csv(csv_path, index=False)
-    return {"status": 200}
 
 def update_csv(id, key, value):
     df = pd.read_csv(csv_path)
