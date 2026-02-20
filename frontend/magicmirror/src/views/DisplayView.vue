@@ -43,9 +43,6 @@ async function get_data(){
     const response = await fetch(base_url+'/filedata');
     const data = await response.json();
     media.value = data.filter(item => item.active === true);
-    if (media.value.length > 0) {
-      
-    }
   } catch (error) {
     console.error('Fehler beim Laden der Medien:', error);
   }
@@ -66,34 +63,29 @@ onUnmounted(() => {
 async function setActiveMedia(id) {
   const response = await fetch(base_url+'/filedata');
   const data = await response.json();
-  console.log(id);
-  console.log(data);
   data[id]['active'] = 'True'
   console.log('send active update');
 
   await fetch(base_url+'/activeupdate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updated)
+    body: JSON.stringify(data)
   });
-  console.log('send active update');
   
 }
 async function checkScheduledMedia() {
   const response = await fetch(base_url+'/scheduled-media');
   const data = await response.json();
   if (data.media) {
-    await setActiveMedia(data.media.id);
+    data.media.forEach(async medias => {
+      await setActiveMedia(medias.id);
+    });
   }
   const filedataResponse = await fetch(base_url+'/filedata');
   const filedata = await filedataResponse.json();
   media.value = filedata.filter(item => item.active === true);
   currentIndex.value = 0;
-  if (media.value.length > 0) {
-    startSlideshow();
-  } else {
-    if (intervalId) clearInterval(intervalId);
-  }
+  if (intervalId) clearInterval(intervalId);
 }
 
 setInterval(checkScheduledMedia, 10000);
