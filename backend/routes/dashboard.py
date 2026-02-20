@@ -119,7 +119,7 @@ async def get_scheduled_media():
             (df["scheduled_date"] == today)
         ]
         if not scheduled.empty:
-            return {"media": scheduled.iloc[0].to_dict()}
+            return {"media": scheduled.to_dict(orient='records')}
         return {"media": None}
     except Exception as e:
         return {"error": str(e)}
