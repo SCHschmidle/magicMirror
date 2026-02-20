@@ -20,7 +20,6 @@ onMounted(async () => {
 
 const startSlideshow = () => {
   if (intervalId) clearInterval(intervalId);
-  console.log("startSlideshow got called");
   if (media.value.length === 0) {
     console.log("Keine Medien vorhanden → Warte-Modus aktiv");
     startEmptyCheck();
@@ -28,9 +27,6 @@ const startSlideshow = () => {
   }
   let duration = media.value[currentIndex.value]?.duration || 10;
   currentDuration.value = duration * 1000;
-  console.log("media: ",media.value.length);
-  console.log("timer: ",currentDuration.value);
-
 
   get_data()
   intervalId = setInterval(() => {
@@ -67,7 +63,6 @@ async function setActiveMedia(id) {
   const response = await fetch(base_url+'/filedata');
   const data = await response.json();
   data[id]['active'] = 'True'
-  console.log('send active update');
 
   await fetch(base_url+'/activeupdate', {
     method: 'POST',
